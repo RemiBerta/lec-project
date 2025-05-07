@@ -28,6 +28,14 @@ class Player
     #[ORM\Column(length: 255)]
     private ?string $nationality = null;
 
+    #[ORM\ManyToOne(inversedBy: 'players')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Team $team = null;
+
+    #[ORM\ManyToOne(inversedBy: 'players')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +97,30 @@ class Player
     public function setNationality(string $nationality): static
     {
         $this->nationality = $nationality;
+
+        return $this;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return $this->team;
+    }
+
+    public function setTeam(?Team $team): static
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }
