@@ -2,9 +2,11 @@
 
 namespace App\DataFixtures;
 
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Player;
 use App\Entity\Role;
 use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -82,7 +84,7 @@ class AppFixtures extends Fixture
             "photo" => "image/Fnatic/FNC_Razork.webp",
             "team_tag" => "FNC",
             "role_name" => "Jungler"
-            
+
         ],
         [
             "player_name" => "Humanoid",
@@ -518,7 +520,9 @@ class AppFixtures extends Fixture
             "role_name" => "Support"
         ]
     ];
-
+  public function __construct(private UserPasswordHasherInterface $hasher)
+  {
+  }
     public function load(ObjectManager $manager): void
     {
         $roles = [];
@@ -532,7 +536,7 @@ class AppFixtures extends Fixture
             $roles[$roleName] = $role;
         }
 
-        $teams= [];
+        $teams = [];
 
         foreach (self::TEAMS as $oneTeam) {
             $team = new Team();
@@ -540,10 +544,10 @@ class AppFixtures extends Fixture
                 ->setName($oneTeam["name"])
                 ->setTag($oneTeam["tag"])
                 ->setLogo($oneTeam["logo"]);
-                
-                $manager->persist($team);
 
-                $teams[$oneTeam['tag']] = $team;
+            $manager->persist($team);
+
+            $teams[$oneTeam['tag']] = $team;
         }
 
         foreach (self::PLAYERS as $onePlayer) {
@@ -560,6 +564,21 @@ class AppFixtures extends Fixture
 
             $manager->persist($player);
         }
+
+        $regularUser = new User();
+        $regularUser
+            ->setEmail('test@test.com')
+            ->setPassword($this->hasher->hashPassword($regularUser, 'test'));
+
+        $manager->persist($regularUser);
+
+        $adminUser = new User();
+        $adminUser
+            ->setEmail('admintest@mtest.com')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPassword($this->hasher->hashPassword($adminUser, 'test'));
+
+        $manager->persist($adminUser);
 
         $manager->flush();
     }
