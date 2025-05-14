@@ -22,11 +22,11 @@ class PlayerType extends AbstractType
             ->add('nationality')
             ->add('team', EntityType::class, [
                 'class' => Team::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
             ->add('role', EntityType::class, [
                 'class' => Role::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
         ;
     }

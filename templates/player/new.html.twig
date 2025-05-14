@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Ajouter un joueur
+{% endblock %}
+
+{% block body %}
+  <div class="bg-lightbluelec min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+      <h1 class="text-3xl font-bold text-center text-gray-800 dark:text-orangelec mb-6">Ajouter un joueur</h1>
+
+      {{ form_start(form) }}
+
+      <div class="space-y-4">
+        {% for field in form %}
+          <div>
+            {{ form_label(field, null, {'label_attr': {'class': 'block text-gray-700 dark:text-gray-300 font-semibold'}}) }}
+            {{ form_widget(field, {'attr': {'class': 'mt-1 block w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500'}}) }}
+            {{ form_errors(field) }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-6">
+        <button type="submit" class="w-full px-4 py-2 bg-orangelec  hover:bg-lightbluelec text-white font-semibold rounded-lg">
+          Enregistrer
+        </button>
+      </div>
+
+      {{ form_end(form) }}
+    </div>
+  </div>
+{% endblock %}
