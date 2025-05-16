@@ -46,6 +46,27 @@ final class PlayerController extends AbstractController
         ]);
     }
 
+    #[Route('/edit/{id}', name: 'player_edit', methods: ["GET", "POST"])]
+    public function editPlayer(Player $player,Request $request, EntityManagerInterface $em): Response
+    {
+        
+        $form = $this->createForm(PlayerType::class, $player);
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($player);
+            $em->flush();
+            return $this->redirectToRoute('players_list');
+        }
+        return $this->render('player/edit.html.twig', [
+            'form' => $form->createView(),
+            'player' => $player,
+        ]);
+    }
+
+
     #[Route('/{id}', name: 'players_item')]
     public function item(Player $player): Response
     {
