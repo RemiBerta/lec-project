@@ -7,9 +7,11 @@ use App\Form\PlayerType;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/players')]
 
@@ -27,29 +29,49 @@ final class PlayerController extends AbstractController
 
 
     #[Route('/new', name: 'player_new', methods: ["GET", "POST"])]
-    // est-ce que ma fonction utilise la méthode form ? ou est-ce que je dois mettre autre chose
-    public function addNewPlayer(Request $request, EntityManagerInterface $em): Response
+
+
+    public function addNewPlayer(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $player = new Player();
         $form = $this->createForm(PlayerType::class, $player);
-
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('player_photos_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    
+                }
+
+                $player->setPhoto('/assets/image/' . $newFilename); 
+            }
+
             $em->persist($player);
             $em->flush();
+
             return $this->redirectToRoute('players_list');
         }
+
         return $this->render('player/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     #[Route('/edit/{id}', name: 'player_edit', methods: ["GET", "POST"])]
-    public function editPlayer(Player $player,Request $request, EntityManagerInterface $em): Response
+    public function editPlayer(Player $player, Request $request, EntityManagerInterface $em): Response
     {
-        
+
         $form = $this->createForm(PlayerType::class, $player);
 
         $form->handleRequest($request);
@@ -74,6 +96,28 @@ final class PlayerController extends AbstractController
     }
 
 
+// #[Route('/{id}/delete', name: 'player_delete', methods: ['POST'])]
+// public function deletePlayer(Request $request, Player $player, EntityManagerInterface $em): Response
+// {
+//     if ($this->isCsrfTokenValid('delete_player_' . $player->getId(), $request->request->get('_token'))) {
+//         dd('delete ok');
+//         $em->remove($player);
+//         $em->flush();
+//     }
+
+//     return $this->redirectToRoute('players_list');
+// }
 
 
+
+#[Route('/{id}/delete', name: 'player_delete', methods: ['POST'])]
+public function delete(Request $request, Player $player, EntityManagerInterface $em): Response
+{
+    if ($this->isCsrfTokenValid('delete_player_' . $player->getId(), $request->request->get('_token'))) {
+        $em->remove($player);
+        $em->flush();
+    }
+
+    return $this->redirectToRoute('players_list');
+}
 }
