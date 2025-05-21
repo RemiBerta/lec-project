@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ dreamTeam.name }}{% endblock %}
+
+{% block body %}
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">
+      Dream Team : {{ dreamTeam.name }}
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      {% for role, player in {
+        'Toplaner': dreamTeam.top,
+        'Jungler': dreamTeam.jungle,
+        'Midlaner': dreamTeam.mid,
+        'AD Carry': dreamTeam.adc,
+        'Support': dreamTeam.support
+      } %}
+        <div class="bg-gray-700 rounded-lg shadow-md p-6 text-center">
+          <h2 class="text-xl font-semibold text-orangelec mb-4">{{ role }}</h2>
+
+          {% if player %}
+            <img src="{{ asset(player.photo) }}" alt="{{ player.playerName }}" class="mx-auto rounded-full w-32 h-32 object-cover mb-3">
+            <p class="text-lg font-medium text-orangelec">{{ player.playerName }}</p>
+            <p class="text-sm text-orangelec">{{ player.firstname }} {{ player.lastname }}</p>
+            <p class="text-sm text-orangelec italic">{{ player.nationality }}</p>
+          {% else %}
+            <p class="text-gray-500">Aucun joueur sélectionné</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+    </div>
+    <div>
+    {% if is_granted('ROLE_ADMIN') %}
+    <form method="post" action="{{ path('dream_team_delete', {'id': dreamTeam.id}) }}" onsubmit="return confirm('Es-tu sûr de vouloir supprimer cette dream team ?');">
+     <input type="hidden" name="_token" value="{{ csrf_token('delete_dream_team_' ~ dreamTeam.id) }}">
+      <button type="submit" class="mt-6 px-6 py-4 bg-gray-700 hover:bg-orangelec text-white font-semibold rounded-lg">
+        Supprimer
+     </button>
+    </form>
+    </div>
+    {% endif %}
+{% endblock %}

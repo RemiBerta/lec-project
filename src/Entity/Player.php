@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -44,6 +46,7 @@ class Player
         mimeTypesMessage: 'Merci d’uploader une image valide (jpg, png, webp)'
     )]
     private ?File $imageFile = null;
+
 
     public function setImageFile(?File $file): void
     {
@@ -143,4 +146,6 @@ class Player
 
         return $this;
     }
+
+
 }

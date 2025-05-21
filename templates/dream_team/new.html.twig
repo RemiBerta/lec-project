@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer ta Dream Team{% endblock %}
+
+{% block body %}
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow mt-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">Créer ta Dream Team</h1>
+
+    {{ form_start(form) }}
+
+    <div class="space-y-4">
+      {{ form_row(form.name) }}
+      {{ form_row(form.top) }}
+      {{ form_row(form.jungle) }}
+      {{ form_row(form.mid) }}
+      {{ form_row(form.adc) }}
+      {{ form_row(form.support) }}
+    </div>
+
+    <div class="mt-6">
+      <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">Valider</button>
+    </div>
+
+    {{ form_end(form) }}
+  </div>
+  
+{% endblock %}

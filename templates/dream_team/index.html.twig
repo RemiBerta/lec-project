@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes les Dream Teams{% endblock %}
+
+{% block body %}
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">
+      Liste des Dream Teams
+    </h1>
+
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for dreamTeam in dreamTeams %}
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-2 text-center">
+              {{ dreamTeam.name }}
+            </h2>
+
+            <ul class="text-sm text-gray-600 space-y-1">
+              <li><strong>Top :</strong> {{ dreamTeam.top.playerName }}</li>
+              <li><strong>Jungle :</strong> {{ dreamTeam.jungle.playerName }}</li>
+              <li><strong>Mid :</strong> {{ dreamTeam.mid.playerName }}</li>
+              <li><strong>ADC :</strong> {{ dreamTeam.adc.playerName }}</li>
+              <li><strong>Support :</strong> {{ dreamTeam.support.playerName }}</li>
+            </ul>
+    
+            <div class="mt-4 text-center">
+              <a href="{{ path('dream_team_show', {id: dreamTeam.id}) }}"
+                 class="inline-block bg-gray-600 text-white px-4 py-2 rounded hover:bg-orangelec">
+                Voir
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+  </div>
+{% endblock %}
