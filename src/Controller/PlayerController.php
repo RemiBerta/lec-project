@@ -33,6 +33,7 @@ final class PlayerController extends AbstractController
 
     public function addNewPlayer(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $player = new Player();
         $form = $this->createForm(PlayerType::class, $player);
         $form->handleRequest($request);
@@ -95,18 +96,6 @@ final class PlayerController extends AbstractController
         return $this->render('player/item.html.twig', ['player' => $player]);
     }
 
-
-// #[Route('/{id}/delete', name: 'player_delete', methods: ['POST'])]
-// public function deletePlayer(Request $request, Player $player, EntityManagerInterface $em): Response
-// {
-//     if ($this->isCsrfTokenValid('delete_player_' . $player->getId(), $request->request->get('_token'))) {
-//         dd('delete ok');
-//         $em->remove($player);
-//         $em->flush();
-//     }
-
-//     return $this->redirectToRoute('players_list');
-// }
 
 
 

@@ -9,6 +9,8 @@ J'ai également du refaire toutes mes fixtures car je les avais triées par team
 
 J'ai eu beaucoup de mal a arriver à supprimer les dreamteams créées par les users, ma logique n'allait pas, c'était surtout dû à une incompréhension de la logique symfony de ma part. ça m'a permis de relire plusieurs fois le cours et de comprendre un peu mieux comment marche symfony.
 
+Ma feature de création de dream team est fonctionnelle. Une fois la team créée elle apparaitra dans l'onglet "Les dream teams" avec toutes les autres teams créées.
+On peut, en étant connecté en tant qu'admin, ajouter des joueurs (apparition d'un bouton dans l'écran "les joueurs"). Supprimer et modifier un joueur, les boutons apparaisse sur la page player/item.html.twig. On peut également supprimer des dream teams en tant qu'admin.
 
 Pour l'utilisation de l'IA je mets un 8/10, je m'en suis beaucoup servi lors de mes bugs et pour me guider sur quoi faire et où le faire. 
 
